@@ -48,13 +48,14 @@ Ethereum, Protocol, EPF，以太坊底层协议
 Telegram：https://t.me/ETHPandaOrg/5427
 
 ## 学习资料/课程安排
-
+### 为期六周深入底层协议前沿研发
 - 与以太坊官网 EPS 同步深入执行层、共识层前沿领域的开发与研究
   - 3月10日开始，为期六周内每周 EPS (Ethereum Protocol Study) 将邀请不同领域的以太坊核心开发进行深入讨论
   - 详情：https://epf.wiki/#/eps/intro
+### 每周协议相关技术分享会
 - 华语区 Fellow 及资深开发技术分享
   - 每周四周会，EPF 残酷共学将邀请往期 EPF Fellow 及底层协议核心开发进行技术和经验分享
-- 学习资料
+### 学习资料
   - 主要围绕 EPF wiki 及官网安排：https://epf.wiki/#/eps/intro
 
 ## 共学激励
