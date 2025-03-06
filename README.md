@@ -101,7 +101,9 @@ Telegram：https://t.me/ETHPandaOrg/5427
 | [Chloezhu010](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/Chloezhu010.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   | | | | | | | | | | | | | | |
 | [zhouCode](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/zhouCode.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   | | | | | | | | | | | | | | |
 | [po](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/po.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   | | | | | | | | | | | | | | |
+| [brucexu-eth](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/brucexu-eth.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   | | | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
