@@ -108,7 +108,9 @@ Telegram：https://t.me/ETHPandaOrg/5427
 | [wsjtadk](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/wsjtadk.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   | | | | | | | | | | | | |
 | [dexhunter](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/dexhunter.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   | | | | | | | | | | | | |
 | [yihaowang](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/yihaowang.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   | | | | | | | | | | | | |
+| [praxis](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/praxis.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
