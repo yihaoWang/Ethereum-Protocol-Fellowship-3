@@ -110,7 +110,9 @@ Telegram：https://t.me/ETHPandaOrg/5427
 | [yihaowang](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/yihaowang.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   | | | | | | | | | | | | |
 | [praxis](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/praxis.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   | | | | | | | | | | | | |
 | [ricky5932TW](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/ricky5932TW.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   | | | | | | | | | | | | |
+| [rockyfang](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/rockyfang.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
