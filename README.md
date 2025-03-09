@@ -113,7 +113,9 @@ Telegram：https://t.me/ETHPandaOrg/5427
 | [rockyfang](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/rockyfang.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   |   | | | | | | | | | | | |
 | [sunkehappy](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/sunkehappy.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   |   | | | | | | | | | | | |
 | [Amber](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/Amber.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   |   | | | | | | | | | | | |
+| [easyshellworld](https://github.com/IntensiveCoLearning/Ethereum-Protocol-Fellowship-3/blob/main/easyshellworld.md) | | | | | | | | | | | | | | | | | | | | | | |   |   |   |   |   |   |   |   |   | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
