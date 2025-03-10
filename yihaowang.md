@@ -20,8 +20,6 @@ timezone: UTC+8
 
 ### 2025.03.10
 
-### 2025.03.10
-
 ![image](https://github.com/user-attachments/assets/e6ae4706-c3b2-41f7-9f7a-8300c62ac288)
 
 #### Consensus Layer(共識層)
