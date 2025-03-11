@@ -17,8 +17,8 @@ timezone: UTC+8
 
 ### 2025.03.10
 
-#### 用户交易的Gas费
-Gas费=基础费用+优先费，这个费用不能低于Gas限额，Gas限额和基础费用由以太坊决定，优先费是给验证者的小费，由用户决定。这意味着用户只需要考虑优先费即可。
+#### 用户转账ETH的燃料费
+燃料费=基础费用+优先费，这个费用不能低于燃料限额，燃料限额和基础费用由以太坊决定，优先费是给验证者的小费，由用户决定。这意味着用户只需要考虑优先费即可。
 ##### 第一种方式：完全手动设定
 
 例如，Gas限额=21000Gwei，基础费用为100Gwei，优先费为10Gwei，则用户实际需要支付的费用为：
@@ -47,5 +47,21 @@ $$Priority=min(maxPriorityFeePerGas, (maxFeePerGas-BaseFee))$$
 
 
 ### 2025.03.11
+上文提及基础费用是以太坊网络决定的，实际上有一个简单的公式，一个区块当前的基础费用是**由上一个区块是否超出了网络最大设定的最大燃料费的一半**来决定，即：
+$$
+BaseFee\equiv
+\left \{
+\begin{array}{l}
+10^{9}, if\space伦敦升级之前 \\
+Gas_{PrevBlock}, if\space Gas_{PrevBlock}=\frac{GasLimit}{2} \\
+Gas_{PrevBlock}*(1+A), if \space Gas_{PrevBlock}>\frac{GasLimit}{2} \\
+Gas_{PrevBlock}*(1-B), if \space Gas_{PrevBlock}<\frac{GasLimit}{2} \\
+\end{array}
+\right.
+$$
+这个方案的动态在于A是可变的，A的范围是`0 ~ 12.5%`、B是`-10% ~ 0`
+
+
+### 2025.03.12
 
 <!-- Content_END -->
