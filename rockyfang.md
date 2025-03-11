@@ -8,6 +8,7 @@ timezone: UTC+8
 # RockyFang
 
 1. 自我介绍: 我叫rocky，來自深圳，目前在一家知名交易所从事后端开发工作，平时的工作也会跟链打交道，希望能在这里学到更多链上相关的知识。感谢提供学习机会。
+笔记按内容整理链接：https://github.com/rockyfang2024/Web3Learn/tree/main/ETH%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0
 2. 你认为你会完成本次残酷学习吗？   会
 3. 你的联系方式（推荐 Telegram）  https://t.me/rockyfang2024
 ## Notes
