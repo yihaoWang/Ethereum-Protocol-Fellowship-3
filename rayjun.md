@@ -53,5 +53,119 @@ go-ethereum 代码结构及各个模块功能如下：
 
 
 ### 2025.03.11
+geth 节点是如何启动的？
+
+TL;DR：geth 的启动的入口是在 cmd/geth 下，在启动时，会初始化交易池、后端 RPC 服务、p2p 模块、状态数据库、链区块数据库等模块，等待这些模块都初始化之后，节点启动完成。 
+
+
+geth 程序入口在 cmd/geth/main.go 中实现， 使用了 https://github.com/urfave/cli 库来定义程序的入口，这个定义在 main.go 中的 init 方法中定义了 Action 是 geth 函数：
+![image](https://github.com/user-attachments/assets/965b788b-289c-4bb1-8be0-5d3d2eba25e1)
+
+在 geth 函数中会做一系列的准备，并启动 node，其中准备工作是在 makeFullNode 函数中来实现的：
+![image](https://github.com/user-attachments/assets/11e304cb-0287-4d6a-acd6-1f8e5bcce845)
+
+在这个函数中去注册和实现以太坊真正的需要实现的一些服务，比如下面的 utils.RegisterEthService 就是启动以太坊节点抽象的实现：
+![image](https://github.com/user-attachments/assets/c602d45a-d945-4e5d-807e-a2b120025cd9)
+
+通过 New 函数来实现以太坊节点：
+![image](https://github.com/user-attachments/assets/b44ac0ab-8be4-40d5-9c4c-7a35072bb088)
+
+geth 整个节点被抽象成一个 Ethereum 的结构体，在 eth/backend.go 中，eth.New() 就是实例化这个 Ethereum 节点的函数：
+```Go
+type Ethereum struct {
+	// core protocol objects
+	config         *ethconfig.Config
+	txPool         *txpool.TxPool
+	localTxTracker *locals.TxTracker
+	blockchain     *core.BlockChain
+
+	handler *handler
+	discmix *enode.FairMix
+
+	// DB interfaces
+	chainDb ethdb.Database // Block chain database
+   //....
+}
+```
+
+`eth.New` 主要用来实现 Ethereum 的初始化，其中会有一些参数和当前节点状态的检查，也会执行一些初始化的操作.
+
+初始化链数据库：
+![image](https://github.com/user-attachments/assets/0d66a953-a2c1-4c95-822b-af9012228183)
+
+初始化 BlockChain：
+![image](https://github.com/user-attachments/assets/357e6e53-ec24-4e05-9d81-c3d399f9c360)
+
+初始化交易池：分为 blob 交易的交易池和其他交易的交易池：
+![image](https://github.com/user-attachments/assets/0fc0dbb6-944d-4d06-9675-2c12152eed1d)
+
+初始化 handler，handler 代表 Ethereum 协议的入口，用来同步节点数据、接受 p2p 交易消息广播、并将新的交易添加到交易池中：
+![image](https://github.com/user-attachments/assets/6af7bc78-bf24-42db-bae8-6a8d72782613)
+
+实例化 RPC 的服务端，并注册 gasPrice 的预言机：
+![image](https://github.com/user-attachments/assets/493b1bd3-5af0-4283-aa3a-35a7eba42d18)
+
+RPC 会在 node 中启动，RPC 接口通过注册的方式注册到 node.go 中：
+
+初始化配置
+```Go
+func New(conf *Config) (*Node, error) {
+    //.....
+    // Register built-in APIs.
+    node.rpcAPIs = append(node.rpcAPIs, node.apis()...)
+    // Configure RPC servers.
+	node.http = newHTTPServer(node.log, conf.HTTPTimeouts)
+	node.httpAuth = newHTTPServer(node.log, conf.HTTPTimeouts)
+	node.ws = newHTTPServer(node.log, rpc.DefaultHTTPTimeouts)
+	node.wsAuth = newHTTPServer(node.log, rpc.DefaultHTTPTimeouts)
+	node.ipc = newIPCServer(node.log, conf.IPCEndpoint())
+    //.....
+}
+```
+启动节点
+```Go
+func (n *Node) Start() error {
+    // .....
+	// open networking and RPC endpoints
+	// 这里会去启动 rpc 服务
+	err := n.openEndpoints()
+    //.....
+}
+```
+
+然后 client 就可以连接节点，开始访问 RPC，RPC 的实现细节在 `internal` 包中实现，比如 eth namespace 在 inernal/ethapi 下实现，所有的接口定义在 backend.go 中。
+
+注册 api:
+
+```Go
+func GetAPIs(apiBackend Backend) []rpc.API {
+	nonceLock := new(AddrLocker)
+	return []rpc.API{
+		{
+			Namespace: "eth",
+			Service:   NewEthereumAPI(apiBackend),
+		}, {
+			Namespace: "eth",
+			Service:   NewBlockChainAPI(apiBackend),
+		}, {
+			Namespace: "eth",
+			Service:   NewTransactionAPI(apiBackend, nonceLock),
+		}, {
+			Namespace: "txpool",
+			Service:   NewTxPoolAPI(apiBackend),
+		}, {
+			Namespace: "debug",
+			Service:   NewDebugAPI(apiBackend),
+		}, {
+			Namespace: "eth",
+			Service:   NewEthereumAccountAPI(apiBackend.AccountManager()),
+		}, {
+			Namespace: "personal",
+			Service:   NewPersonalAccountAPI(apiBackend, nonceLock),
+		},
+	}
+}
+```
+
 
 <!-- Content_END -->
