@@ -58,7 +58,45 @@ timezone: UTC+8
 - *做了一下quizzes，感觉主要是夸夸以太坊*
 ![](./assets/dexhunter/screenshot-0310.png)
 
-
 ### 2025.03.11
+
+今天看了[week4](https://epf.wiki/#/eps/week4)的内容，主要是关于测试和安全
+* 第一次知道retesteth还有个webui [这里](http://retesteth.ethdevops.io/web/)，可以测试各种不同的方法，教程在[这里](https://ethereum-tests.readthedocs.io/en/latest/retesteth-tutorial.html)，还蛮有意思的
+
+```
+Running tests using path: /data/tests
+Running 1 test case...
+Retesteth config path: /var/www/.retesteth
+WARNING: Retesteth configs version is different (running: '0.3.2-legacy' vs config '0.3.2-cancun')!
+WARNING: Update configs to the latest by deleting the folder `/var/www/.retesteth`!
+Active client configurations: 't8ntool '
+Checking test filler hashes for GeneralStateTests/stExample
+Filter: 'accessListExample Shanghai'
+Check `/data/tests/GeneralStateTests/stExample/accessListExample.json` hash
+SrcFile `/data/tests/src/GeneralStateTestsFiller/stExample/accessListExampleFiller.yml`
+Read json structure accessListExampleFiller.yml
+Read json structure finish
+Running tests for config 'Ethereum GO on StateTool' 2
+Test Case "stExample": (1 of 1)
+100%
+Instantiated: "evm version 1.15.6-unstable-4cdd7c86-20250310"
+Running accessListExample: (6995263567478450108)
+Read json structure accessListExample.json
+Read json finish
+WARNING: Specified filter did not run a single transaction!  (GeneralStateTests/stExample/accessListExample, fork: Shanghai, TrInfo: d: -1, g: -1, v: -1)
+
+*** No errors detected
+*** Total Tests Run: 1
+
+
+--------
+*** TOTAL WARNINGS DETECTED: 3 warnings during all test execution!
+--------
+info: Retesteth configs version is different (running: '0.3.2-legacy' vs config '0.3.2-cancun')!
+info: Update configs to the latest by deleting the folder `/var/www/.retesteth`!
+info: Specified filter did not run a single transaction!  (GeneralStateTests/stExample/accessListExample, fork: Shanghai, TrInfo: d: -1, g: -1, v: -1) (GeneralStateTests/stExample/accessListExample, fork: Shanghai, TrInfo: d: -1, g: -1, v: -1)
+```
+
+### 2025.03.12
 
 <!-- Content_END -->
