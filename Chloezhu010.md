@@ -26,8 +26,8 @@ timezone: UTC+1
 本周参与 Portal Summit，主要针对轻客户端及与执行层客户端 integrate 的讨论，笔记整理中
 - 讨论主题包括
    - Portal Network 深入介绍
-   - Portal State Network 深入介绍
-   - Discv5 协议改进
+   - Portal State Network 研发进展介绍
+   - Discv5 协议改进讨论
    - EIP 4444 执行层客户端实现进展
    - EIP 7745 深入介绍
 - 参考链接
