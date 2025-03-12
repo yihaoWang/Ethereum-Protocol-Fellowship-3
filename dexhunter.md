@@ -99,4 +99,25 @@ info: Specified filter did not run a single transaction!  (GeneralStateTests/stE
 
 ### 2025.03.12
 
+不知道为什么昨天的commit被overwritten了，然后根据读历史的启发今天开始带着问题来学习。
+-> 今天想知道的问题是，为什么以太坊主链到2025年了还是这么贵和慢 why is ehtereum mainnet still costly and slow in 2025?
+
+
+slowness:
+> blocks produced every 12 seconds and each block containing about 185 transactions on average.
+
+costliness:
+> The costliness arises from gas fees, which users pay for computational resources. During high demand, these fees spike due to limited block space, and the market-driven gas price mechanism means users must bid higher to get transactions processed quickly. Even with changes like the London hard fork in 2021 introducing a base fee, network congestion still drives up costs.
+
+根据 [EIP-1559](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1559.md)
+```
+Transaction/Gas fee = Gas used × (Base fee + Priority fee)
+```
+
+可能是要等pectra和sharding才能让主链交易变得更快或便宜
+
+References:
+1. [chatgpt deepresearch reference](https://chatgpt.com/share/67d0ced5-5e74-800d-89a3-7bd7fc4f8006)
+2. [grok research](https://grok.com/share/bGVnYWN5_1aab2e22-5f73-48db-bf1f-718eed7559c6)
+
 <!-- Content_END -->
