@@ -30,7 +30,7 @@ timezone: UTC+1
    - Discv5 协议改进
    - EIP 4444 执行层客户端实现进展
    - EIP 7745 深入介绍
-- 一些参考链接
+- 参考链接
     - Portal network deep dive by Piper：https://docs.google.com/presentation/d/16lscCmWZfbxDXgdubV4alRjqnEGczFc2KAsPXgbvqCs/edit#slide=id.gf912b6efc8_0_95
 
 ### 2025.03.13
