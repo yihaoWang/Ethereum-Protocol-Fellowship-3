@@ -167,5 +167,57 @@ func GetAPIs(apiBackend Backend) []rpc.API {
 }
 ```
 
+### 2025.03.12
+交易是如何被节点处理的（1）
+
+向以太坊节点发送交易的方式由两种：
+
+- `SendTransaction`
+- `SendRawTransaction`
+
+SendTransaction 需要节点本身有对应的私钥来对签名交易，SendRawTransaction 则是需要提前对交易签名，然后将签好名的交易提交到节点，这种方式更常用，使用 Metamask 等钱包使用的就是这种方式。
+
+在这里以 SendRawTransaction 为例，在节点启动之后，节点会启动以一个 API 模块，用来处理外部的各类 API 请求，SendRawTransaction 就是其中的一个 API，源代码在 `internal/ethapi/api.go` :
+```Go
+func (api *TransactionAPI) SendRawTransaction(ctx context.Context, input hexutil.Bytes) (common.Hash, error) {
+	tx := new(types.Transaction)
+	if err := tx.UnmarshalBinary(input); err != nil {
+		return common.Hash{}, err
+	}
+	return SubmitTransaction(ctx, api.b, tx)
+}
+```
+
+当前以太坊总共支持五类交易，通过 `tx.UnmarshalBinary` 方法，将对应的交易类型解析出来，并且将交易数据反序列化。
+
+五类交易：
+
+- LegacyTxType
+- AccessListTxType
+- DynamicFeeTxType
+- BlobTxType
+- SetCodeTxType
+
+在完成交易的反序列化之后，就会调用 `SubmitTransaction` 函数向交易池提交交易，SendTransaction 和 SendRawTransaction 都会使用这个函数来向交易池提交交易。
+
+检查 gas fee 是否合理：
+![image](https://github.com/user-attachments/assets/c31c4b78-18ec-4acf-8e2d-e8ece01ed6cb)
+
+EIP-155 通过在交易签名中引入 chainID 参数，解决了跨链交易重放问题。该检查确保当节点配置开启 EIP155Required 时，所有通过 RPC 提交的交易都必须符合这个标准。
+![image](https://github.com/user-attachments/assets/8293518e-24ce-4d35-9341-3c3c30d339dc)
+
+提交交易到交易池：
+![image](https://github.com/user-attachments/assets/14e12d3a-7dc5-4c2c-8617-5eaa7aca6b12)
+
+![image](https://github.com/user-attachments/assets/80b12d41-34df-4263-bb50-519c2c638b65)
+
+在交易池中，会根据对应的交易类型来匹配对应的交易池，如果是 blob 交易，那么就会放入 BlobPool ，否则放入LegacyPool 。
+![image](https://github.com/user-attachments/assets/fe592681-3ccc-4500-a219-db0e569534dc)
+
+到这里，用户提交的交易就处理完成了，后续的步骤会由节点来处理。
+
+如果在交易打包之前，重新发送了一笔交易，新的交易设置了新的 gasPrice 和 gasLimit，就会把原来交易池中的交易删除，替换成了新的 gasPrice 和 gasLimit 之后重新返回到交易池中。
+![image](https://github.com/user-attachments/assets/fd852ae3-ed64-4814-8d99-d8ebcd7aaebc)
+
 
 <!-- Content_END -->
