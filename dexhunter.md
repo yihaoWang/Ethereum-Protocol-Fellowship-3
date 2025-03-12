@@ -58,7 +58,67 @@ timezone: UTC+8
 - *做了一下quizzes，感觉主要是夸夸以太坊*
 ![](./assets/dexhunter/screenshot-0310.png)
 
-
 ### 2025.03.11
+
+今天看了[week4](https://epf.wiki/#/eps/week4)的内容，主要是关于测试和安全
+* 第一次知道retesteth还有个webui [这里](http://retesteth.ethdevops.io/web/)，可以测试各种不同的方法，教程在[这里](https://ethereum-tests.readthedocs.io/en/latest/retesteth-tutorial.html)，还蛮有意思的
+
+```
+Running tests using path: /data/tests
+Running 1 test case...
+Retesteth config path: /var/www/.retesteth
+WARNING: Retesteth configs version is different (running: '0.3.2-legacy' vs config '0.3.2-cancun')!
+WARNING: Update configs to the latest by deleting the folder `/var/www/.retesteth`!
+Active client configurations: 't8ntool '
+Checking test filler hashes for GeneralStateTests/stExample
+Filter: 'accessListExample Shanghai'
+Check `/data/tests/GeneralStateTests/stExample/accessListExample.json` hash
+SrcFile `/data/tests/src/GeneralStateTestsFiller/stExample/accessListExampleFiller.yml`
+Read json structure accessListExampleFiller.yml
+Read json structure finish
+Running tests for config 'Ethereum GO on StateTool' 2
+Test Case "stExample": (1 of 1)
+100%
+Instantiated: "evm version 1.15.6-unstable-4cdd7c86-20250310"
+Running accessListExample: (6995263567478450108)
+Read json structure accessListExample.json
+Read json finish
+WARNING: Specified filter did not run a single transaction!  (GeneralStateTests/stExample/accessListExample, fork: Shanghai, TrInfo: d: -1, g: -1, v: -1)
+
+*** No errors detected
+*** Total Tests Run: 1
+
+
+--------
+*** TOTAL WARNINGS DETECTED: 3 warnings during all test execution!
+--------
+info: Retesteth configs version is different (running: '0.3.2-legacy' vs config '0.3.2-cancun')!
+info: Update configs to the latest by deleting the folder `/var/www/.retesteth`!
+info: Specified filter did not run a single transaction!  (GeneralStateTests/stExample/accessListExample, fork: Shanghai, TrInfo: d: -1, g: -1, v: -1) (GeneralStateTests/stExample/accessListExample, fork: Shanghai, TrInfo: d: -1, g: -1, v: -1)
+```
+
+### 2025.03.12
+
+不知道为什么昨天的commit被overwritten了，然后根据读历史的启发今天开始带着问题来学习。
+-> 今天想知道的问题是，为什么以太坊主链到2025年了还是这么贵和慢 why is ehtereum mainnet still costly and slow in 2025?
+
+
+slowness:
+> blocks produced every 12 seconds and each block containing about 185 transactions on average.
+
+costliness:
+> The costliness arises from gas fees, which users pay for computational resources. During high demand, these fees spike due to limited block space, and the market-driven gas price mechanism means users must bid higher to get transactions processed quickly. Even with changes like the London hard fork in 2021 introducing a base fee, network congestion still drives up costs.
+
+根据 [EIP-1559](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1559.md)
+```
+Transaction/Gas fee = Gas used × (Base fee + Priority fee)
+```
+
+可能是要等pectra和sharding才能让主链交易变得更快或便宜
+
+References:
+1. [chatgpt deepresearch reference](https://chatgpt.com/share/67d0ced5-5e74-800d-89a3-7bd7fc4f8006)
+2. [grok research](https://grok.com/share/bGVnYWN5_1aab2e22-5f73-48db-bf1f-718eed7559c6)
+
 
 <!-- Content_END -->
