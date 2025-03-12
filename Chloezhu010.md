@@ -21,10 +21,18 @@ timezone: UTC+1
 
 <!-- Content_START -->
 
-### 2025.03.10
+### 2025.03.12
 
-笔记内容
+本周参与 Portal Summit，主要针对轻客户端及与执行层客户端 integrate 的讨论，笔记整理中
+- 讨论主题包括
+   - Portal Network 深入介绍
+   - Portal State Network 深入介绍
+   - Discv5 协议改进
+   - EIP 4444 执行层客户端实现进展
+   - EIP 7745 深入介绍
+- 一些参考链接
+    - Portal network deep dive by Piper：https://docs.google.com/presentation/d/16lscCmWZfbxDXgdubV4alRjqnEGczFc2KAsPXgbvqCs/edit#slide=id.gf912b6efc8_0_95
 
-### 2025.03.11
+### 2025.03.13
 
 <!-- Content_END -->
