@@ -167,4 +167,64 @@ JSON-RPC 使用 JSON，因此具有相同的类型系统（参见 http://www.jso
 | -32000 至 -32099 | 服务器错误 | 保留供实现定义的服务器错误使用。                         |
 
 剩余空间可用于应用定义的错误。
+
+## 2025.03.13
+
+以太坊中使用RPC主要通过Web3.js或者ethers.js等库，其内置了JSON-RPC的调用
+
+例如，通过调用 `web3.eth.getBalance(address)` 就可以查询某个地址的余额，而不需要手动构造 JSON 请求。
+
+### RPC 使用流程
+
+下面以一个典型 DApp 前端调用 RPC 的流程为例：
+
+1. **选择 RPC 服务提供商**
+
+   - 可以使用自己运行的以太坊节点（例如 geth 或 openethereum），也可以使用第三方提供的服务（如 Infura、Alchemy 等）。这些服务提供一个可访问的节点 URL。
+   - DApp 配置中会指定这个 RPC 端点，通常是一个 HTTPS 或 WebSocket 地址。
+
+2. **建立连接**
+
+   - 前端（或后端）通过 RPC 库（如 Web3.js 或 ethers.js）与指定的节点建立连接。
+
+   - 例如，在 Web3.js 中：
+
+     ```
+     js复制编辑const Web3 = require('web3');
+     const web3 = new Web3('https://mainnet.infura.io/v3/YOUR-PROJECT-ID');
+     ```
+
+3. **查询数据**
+
+   - 通过调用 RPC 方法查询区块链数据：
+     - 查询余额：`web3.eth.getBalance(address)`
+     - 查询交易信息：`web3.eth.getTransaction(txHash)`
+     - 获取当前区块号：`web3.eth.getBlockNumber()`
+   - 这些调用底层都会构造一个 JSON-RPC 请求并发送给节点，然后节点返回相应的数据。
+
+4. **发送交易**
+
+   - 当用户需要执行某个状态变更（例如转账或调用智能合约）时：
+     - 前端构造一笔交易，包括：发送地址、接收地址、gas 限额、gas 价格、数据（如果调用合约方法）等。
+     - 用户使用钱包（如 MetaMask）或本地私钥对交易进行签名。
+     - 签名后的交易通过 RPC 方法（例如 `eth_sendRawTransaction`）发送到节点。
+     - 节点验证交易签名和其他参数，将交易广播到整个网络。
+
+5. **监听事件与结果确认**
+
+   - DApp 还可以通过 RPC 订阅机制（例如使用 WebSocket 订阅 `logs` 或 `newHeads`）来监听智能合约事件或新区块的生成，从而对用户的操作给予反馈。
+
+   - 例如，使用 ethers.js 监听合约事件：
+
+     ```javascript
+     contract.on("Transfer", (from, to, value, event) => {
+         console.log(`Transfer from ${from} to ${to} of ${value}`);
+     });
+     ```
+
+### 小结
+
+- **抽象化库的作用**：像 Web3.js 和 ethers.js 将 JSON-RPC 的繁琐细节封装起来，开发者只需要调用库函数即可实现查询、提交交易、监听事件等操作。
+- **钱包的整合**：大部分 DApp 都集成了钱包（例如 MetaMask），它会负责管理用户的私钥、签名交易以及连接到 RPC 端点，简化了前端开发。
+- **安全性与性能**：使用稳定的第三方 RPC 服务可以提高访问速度和稳定性，但也需要注意服务的安全性和去中心化程度，确保数据来源可靠。
 <!-- Content_END -->
