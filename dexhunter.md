@@ -121,4 +121,27 @@ References:
 2. [grok research](https://grok.com/share/bGVnYWN5_1aab2e22-5f73-48db-bf1f-718eed7559c6)
 
 
+### 2025.03.13
+
+继续啃PoS
+
+* [eth pos](https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/)
+* [vitalik's post](https://vitalik.eth.limo/general/2017/12/31/pos_faq.html)
+* [Casper FFG](https://arxiv.org/pdf/1710.09437)
+
+--> 发现一个简单的python实现 [simple casper](https://github.com/omoindrot/simple_casper/tree/master)
+
+不过好像没有测试finality和一些攻击的场景，感觉可以改写试试
+
+原本的casper代码 [https://github.com/ethereum/casper](https://github.com/ethereum/casper)
+新的代码  [https://github.com/ethereum/consensus-specs](https://github.com/ethereum/consensus-specs)
+
+validator的条件
+* 32 ETH
+
+消减条约 slashing rules
+* A validator must not publish two distinct votes for the same target height
+* A validator must not vote within the span of its other votes.
+
+
 <!-- Content_END -->

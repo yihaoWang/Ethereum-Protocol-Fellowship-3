@@ -219,5 +219,115 @@ EIP-155 通过在交易签名中引入 chainID 参数，解决了跨链交易重
 如果在交易打包之前，重新发送了一笔交易，新的交易设置了新的 gasPrice 和 gasLimit，就会把原来交易池中的交易删除，替换成了新的 gasPrice 和 gasLimit 之后重新返回到交易池中。
 ![image](https://github.com/user-attachments/assets/fd852ae3-ed64-4814-8d99-d8ebcd7aaebc)
 
+### 2025.03.13
+交易是如何被节点处理的（2）
+
+交易在被发送到节点之后，需要在节点之间传播。
+
+节点接收到交易之后，需要在网络中进行传播，txpool（core/txpool/txpool.go ）提供了 SubscribeTransactions 方法，可以订阅交易池中的新事件：
+
+```Go
+func (p *TxPool) SubscribeTransactions(ch chan<- core.NewTxsEvent, reorgs bool) event.Subscription {
+	subs := make([]event.Subscription, len(p.subpools))
+	for i, subpool := range p.subpools {
+		subs[i] = subpool.SubscribeTransactions(ch, reorgs)
+	}
+	return p.subs.Track(event.JoinSubscriptions(subs...))
+}
+```
+
+新交易会通过 p2p 模块广播出去，同时也会从 p2p 网络中接收新的交易。在 eth/backend.go 中初始化 Ethereum 实例时，会初始化 p2p 模块，添加交易池的接口。p2p 模块运行起来之后，会从 p2p 消息中解析出交易请求添加到交易池中：
+```Go
+// eth/backend.go New 函数
+if eth.handler, err = newHandler(&handlerConfig{
+		NodeID:         eth.p2pServer.Self().ID(),
+		Database:       chainDb,
+		Chain:          eth.blockchain,
+		TxPool:         eth.txPool,
+		Network:        networkID,
+		Sync:           config.SyncMode,
+		BloomCache:     uint64(cacheLimit),
+		EventMux:       eth.eventMux,
+		RequiredBlocks: config.RequiredBlocks,
+	}); err != nil {
+		return nil, err
+	}
+	
+	// eth/handler.go newHandler 函数，注册获取信息新交易的过程
+	fetchTx := func(peer string, hashes []common.Hash) error {
+		p := h.peers.peer(peer)
+		if p == nil {
+			return errors.New("unknown peer")
+		}
+		return p.RequestTxs(hashes)
+	}
+	addTxs := func(txs []*types.Transaction) []error {
+		return h.txpool.Add(txs, false)
+	}
+	h.txFetcher = fetcher.NewTxFetcher(h.txpool.Has, addTxs, fetchTx, h.removePeer)
+	
+	
+	// eth/handler_eth.go Handle 方法，在接收到新的交易之后，会添加到交易池中
+		for _, tx := range *packet {
+			if tx.Type() == types.BlobTxType {
+				return errors.New("disallowed broadcast blob transaction")
+			}
+		}
+		return h.txFetcher.Enqueue(peer.ID(), *packet, false)
+	
+	// eth/fetcher/tx_fetcher.go 的 Handle 方法会调用上面注册的 addTxs 来将讲义添加到交易池
+	for j, err := range f.addTxs(batch) {
+		//....
+	}
+```
+
+同时 p2p 模块 (eth/handler.go)  会持续监听新交易事件，如果接收到了新交易，那么就会发送广播，将交易广播出去：
+```Go
+// eth/handler.go 在产生新交易之后，会通过 p2p 网络广播出去
+func (h *handler) txBroadcastLoop() {
+	defer h.wg.Done()
+	for {
+		select {
+		case event := <-h.txsCh:
+			h.BroadcastTransactions(event.Txs)
+		case <-h.txsSub.Err():
+			return
+		}
+	}
+}
+```
+
+在广播交易时，需要对交易进行分类，如果是 blob 交易或者是超过了一定大小的交易，无法直接传播，对于普通的交易，则标记为可以直接传播。然后从当前节点的对等节点中去找那些没有这笔交易的节点。如果节点可以直接广播，则标记为 true：
+
+![image](https://github.com/user-attachments/assets/8274a365-4702-4c7b-94ab-060d6682d400)
+
+依照上面的原则对交易分类完成，可以直接传播的交易就直接发送，blob 交易或者大交易则只传播 hash，等到需要用到这笔交易的时候再来获取。
+![image](https://github.com/user-attachments/assets/48094943-793a-4592-a4e8-f7cec28b1987)
+
+这些延迟加载的逻辑在 core/txpool/subpool.go 中实现，实际需要获取交易时，再从具体的交易池获取：
+
+```Go
+type LazyTransaction struct {
+	Pool LazyResolver       // Transaction resolver to pull the real transaction up
+	Hash common.Hash        // Transaction hash to pull up if needed
+	Tx   *types.Transaction // Transaction if already resolved
+
+	Time      time.Time    // Time when the transaction was first seen
+	GasFeeCap *uint256.Int // Maximum fee per gas the transaction may consume
+	GasTipCap *uint256.Int // Maximum miner tip per gas the transaction can pay
+
+	Gas     uint64 // Amount of gas required by the transaction
+	BlobGas uint64 // Amount of blob gas required by the transaction
+}
+
+func (ltx *LazyTransaction) Resolve() *types.Transaction {
+	if ltx.Tx != nil {
+		return ltx.Tx
+	}
+	return ltx.Pool.Get(ltx.Hash)
+}
+```
+
+
 
 <!-- Content_END -->
