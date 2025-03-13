@@ -34,5 +34,8 @@ timezone: UTC+1
     - Portal network deep dive by Piper：https://docs.google.com/presentation/d/16lscCmWZfbxDXgdubV4alRjqnEGczFc2KAsPXgbvqCs/edit#slide=id.gf912b6efc8_0_95
 
 ### 2025.03.13
+- Update Portal Summit discussion notes: https://hackmd.io/DWsDCFooT-u7skmgAb-uSA?view
+
+### 2025.03.14
 
 <!-- Content_END -->
