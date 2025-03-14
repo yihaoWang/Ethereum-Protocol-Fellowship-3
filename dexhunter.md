@@ -149,7 +149,7 @@ validator的条件
 * [Understanding-Ethereum-Go-Version](https://github.com/ABCDELabs/Understanding-Ethereum-Go-version)
 * [mastering ethereum](https://github.com/ethereumbook/ethereumbook)
 
-以及开始看以太坊辕马
+以及开始看以太坊源码
 * [reth](https://github.com/paradigmxyz/reth)
 * [go-eth](https://github.com/ethereum/go-ethereum)
 
