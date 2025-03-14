@@ -300,6 +300,39 @@ authorizationList
 to                   0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
 ```
 
+# 2025.03.14
+
+## Deep Dive into Pectra EIPs https://gist.github.com/Thegaram/64b5d43144d5740f01907b48d986b8e7
+
+EIP-7702 defines a new transaction type:
+
+```
+type SetCodeTx struct {
+    ChainID    uint64
+    Nonce      uint64
+    GasTipCap  *uint256.Int
+    GasFeeCap  *uint256.Int
+    Gas        uint64
+    To         common.Address
+    Value      *uint256.Int
+    Data       []byte
+    AccessList AccessList
+    AuthList   []SetCodeAuthorization // <-- this is new
+
+    V *uint256.Int `json:"v" gencodec:"required"`
+    R *uint256.Int `json:"r" gencodec:"required"`
+    S *uint256.Int `json:"s" gencodec:"required"`
+}
+```
+
+通过这种 tx type 可以将 SetCodeAuthorization 加入到 EOA 地址上面。
+
+Debugging in go-ethereum and checking how EIP 7702 work.
+
+但是生成的测试用例有点问题，所以没有完成。
+
+
+
 
 
 <!-- Content_END -->
