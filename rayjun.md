@@ -330,6 +330,7 @@ func (ltx *LazyTransaction) Resolve() *types.Transaction {
 
 ### 2025.03.14
 交易是如何被节点处理的（3）
+
 在交易提交到交易池之后，会在节点之间传播，但某个 Validator 被选中出块之后，就会委托 CL 和 EL 构造区块。
 
 CL 在接收到区块构造请求之后，就会调用 EL 的 engineAPI 来构造区块。会先调用 `ForkchoiceUpdated`  API 来发送构造区块的请求，具体调用哪个版本依据当前网络版本来决定，调用完成之后会返回 PayloadID，然后根据这个参数调用 `GetPayload` 对应版本 API 来获取区块的构造结果。
@@ -354,5 +355,37 @@ CL 在接收到区块构造请求之后，就会调用 EL 的 engineAPI 来构�
 ![image](https://github.com/user-attachments/assets/b5ae4a52-29c5-4529-9ed2-a9ee073deea8)
 
 CL 层在 slot 结束之前会调用 getPayload API 来获取最终打包好的区块。如果提交的交易被打包在这个区块当中，那么交易就会被 EVM 执行，并改变世界状态。如果这次没有被打包，那么就会等待下一次被打包。
+
+### 2025.03.15
+交易时如何被节点处理的（4）
+
+在打包交易的过程中，同时也会将交易在 EVM 中执行，得到区块交易完成之后状态的变化，同样还是在 generateWork 函数中：
+![image](https://github.com/user-attachments/assets/52e698cd-502f-4559-bc66-a8af220a95e6)
+
+准备好当前区块执行的环境变量，主要是获取最新区块和最新状态数据库：
+![image](https://github.com/user-attachments/assets/74a14aee-4d5c-493c-a387-e881b980b2ab)
+
+这里的 state 就是代表状态数据库：
+![image](https://github.com/user-attachments/assets/9144eb2d-491c-446e-a7cd-922c529dd1a7)
+
+在这里形成了一个 StateDB → stateObjects→ stateAcount 的结构，分别代表完整的状态数据库、账号对象集合以及单个账户对象。其中 StateObject 中结构中，dirtyStorage 表示当前交易执行后的状态，pendingStorage 表示当前区块执行之后的状态，originStorage 表示原始的状态，所以这三个状态从新到是 dirtyStorage → pendingStorage → originStorage：
+![image](https://github.com/user-attachments/assets/7d0df004-e17d-4a7e-996e-9a5b1e649331)
+![image](https://github.com/user-attachments/assets/1a07a1f1-33e5-4d79-beda-bf196abe0406)
+
+在获取到当前的环境变量之后，就可以执行交易了，首先回将交易区分成本地交易和正常交易，然后会按照矿工费从高到低打包本地交易，本地交易执行完成之后，再按照矿工费从高到低打包正常交易，交易具体的执行都在 commitTransactions 方法中进行：
+![image](https://github.com/user-attachments/assets/c00b1fb2-810b-46a6-95a2-32e9c4fb2db4)
+
+最终都是调用 ApplyTransaction 函数，在这个函数中，会调用 EVM 执行交易，并修改状态数据库：
+```Go
+func ApplyTransaction(evm *vm.EVM, gp *GasPool, statedb *state.StateDB, header *types.Header, tx *types.Transaction, usedGas *uint64) (*types.Receipt, error) {
+	msg, err := TransactionToMessage(tx, types.MakeSigner(evm.ChainConfig(), header.Number, header.Time), header.BaseFee)
+	if err != nil {
+		return nil, err
+	}
+	// Create a new context to be used in the EVM environment
+	return ApplyTransactionWithEVM(msg, gp, statedb, header.Number, header.Hash(), tx, usedGas, evm)
+}
+```
+
 
 <!-- Content_END -->
