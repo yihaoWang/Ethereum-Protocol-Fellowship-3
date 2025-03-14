@@ -143,5 +143,15 @@ validator的条件
 * A validator must not publish two distinct votes for the same target height
 * A validator must not vote within the span of its other votes.
 
+### 2025.03.14
+
+参考两本书
+* [Understanding-Ethereum-Go-Version](https://github.com/ABCDELabs/Understanding-Ethereum-Go-version)
+* [mastering ethereum](https://github.com/ethereumbook/ethereumbook)
+
+以及开始看以太坊辕马
+* [reth](https://github.com/paradigmxyz/reth)
+* [go-eth](https://github.com/ethereum/go-ethereum)
+
 
 <!-- Content_END -->
