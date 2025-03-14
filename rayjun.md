@@ -328,6 +328,31 @@ func (ltx *LazyTransaction) Resolve() *types.Transaction {
 }
 ```
 
+### 2025.03.14
+交易是如何被节点处理的（3）
+在交易提交到交易池之后，会在节点之间传播，但某个 Validator 被选中出块之后，就会委托 CL 和 EL 构造区块。
 
+CL 在接收到区块构造请求之后，就会调用 EL 的 engineAPI 来构造区块。会先调用 `ForkchoiceUpdated`  API 来发送构造区块的请求，具体调用哪个版本依据当前网络版本来决定，调用完成之后会返回 PayloadID，然后根据这个参数调用 `GetPayload` 对应版本 API 来获取区块的构造结果。
+
+无论调用的是 ForkchoiceUpdated 的哪个版本，最终都是调用 forkchoiceUpdated 方法来构造区块：
+![image](https://github.com/user-attachments/assets/3531596f-3d1a-4201-9343-8e8a62db2dc9)
+
+并且在这个方法中会对 EL 当前的状态做校验，如果当前 EL 正在同步区块、或者最终的区块不对，那么都会直接返回，构造区块失败：
+![image](https://github.com/user-attachments/assets/5be19e07-094d-439c-9f9f-5664d624b82a)
+![image](https://github.com/user-attachments/assets/4faa18c0-a9fc-4f8d-9c4e-fb65d7c34a15)
+
+在校验完成之后，就会调用 miner 的 BuildPayload 来构造区块：
+![image](https://github.com/user-attachments/assets/4a76ab9c-fbfd-465b-8805-c9cdfd05e9b2)
+
+构造区块的具体操作都在 generateWork 中完成，但这里需要主要，调用这个方法之后，就产生了一个 payload，并把这个 payloadID 返回给 EL 层。同时会启动一个 goroutine，持续的去交易池中找价值更高的交易，每次重新打包交易之后，都会更新 payload。
+![image](https://github.com/user-attachments/assets/548150e1-a51a-4ed0-8a18-a345242a6050)
+
+打包交易的是通过 fillTransactions 方法来完成：
+![image](https://github.com/user-attachments/assets/bfd81d4d-440b-414b-af50-05fda20dc778)
+
+实际上就是调用 txpool 的 Pending 方法来获取待打包的交易：
+![image](https://github.com/user-attachments/assets/b5ae4a52-29c5-4529-9ed2-a9ee073deea8)
+
+CL 层在 slot 结束之前会调用 getPayload API 来获取最终打包好的区块。如果提交的交易被打包在这个区块当中，那么交易就会被 EVM 执行，并改变世界状态。如果这次没有被打包，那么就会等待下一次被打包。
 
 <!-- Content_END -->
