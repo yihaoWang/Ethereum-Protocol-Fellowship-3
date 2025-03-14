@@ -150,5 +150,30 @@ timezone: UTC+8
 
 
 ### 2025.03.14
+#### 4th  测试与安全
+* **EVM测试**
+  * **目的** 确保每个执行客户端（Execution Client）都符合以太坊规范，否则可能导致链的分叉。
+      * 以太坊执行层规范（Ethereum Execution Layer Specification）来源：`https://github.com/ethereum/execution-spec-tests`
+  * **测试要素**
+      * **Pre-state（前置状态）**：描述以太坊链的状态，包括账户余额、nonce、代码和存储。
+      * **Environment（环境变量）**：定义区块链状态，如时间戳、前区块哈希值、gas 限制等。
+      * **Transaction（交易）**：测试区块链交互，涉及账户信息、交易金额、gas 限制等。
+      * **Post-state（后置状态）**：修改或创建账户的最终状态。    
+ * **EVM 测试格式**
+      * **State Testing（状态测试）**：使用 state root（状态根） 进行验证。
+      * **预期结果**：相同的输入应返回相同的 state root
+      * **Fuzzy Differential State Testing（模糊差分测试)**：在基础交易上添加 FuzzyVM 生成的智能合约代码，检查所有客户端是否仍能返回相同的 state root。
+      * **Blockchain Testing（区块链测试）**：需要完整区块测试（如 EIP-1559 基础费用计算）。
+      * **Blockchain Negative Testing（区块链负面测试）**：向区块链添加无效区块，验证客户端是否能正确拒绝，并回溯到正确区块。
+
+* **主要测试网络**
+
+| **测试网**  | **状态** | **共识机制** | **用途** | **启动时间** | **RPC 端点** |
+|------------|---------|-------------|----------|--------------|--------------|
+| **Sepolia** | ✅ 运行中 | 权益证明（PoS） | **推荐** dApp & 合约测试 | 2021 年 10 月  | `https://ethereum-sepolia.publicnode.com` |
+| **Holesky** | ✅ 运行中 | 权益证明（PoS） | **推荐** 验证者、Staking & 共识测试 | 2023 年 9 月 | `https://ethereum-holesky.publicnode.com` |  
+
+
+### 2025.03.15
 
 <!-- Content_END -->
