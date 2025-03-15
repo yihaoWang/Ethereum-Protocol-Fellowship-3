@@ -331,7 +331,58 @@ Debugging in go-ethereum and checking how EIP 7702 work.
 
 但是生成的测试用例有点问题，所以没有完成。
 
+# 2025.03.15
 
+## 继续 deep dive 7702 go-ethereum implementation
+
+```
+aa: { // The address 0xAAAA calls into addr2
+				Code:    program.New().Call(nil, addr2, 1, 0, 0, 0, 0).Bytes(),
+				Nonce:   0,
+				Balance: big.NewInt(0),
+			},
+```
+
+program.New().Call is a convenience function to make a call, and convert to the bytecode:
+
+```
+program.New().Call(nil, addr2, 1, 0, 0, 0, 0).Bytes() 实际输出：
+"`\x00`\x00`\x00`\x00`\x01sp<K+\xd7\f\x16\x9fW\x17\x10\x1c\xae\xe5C)\x9f\xc9F\xc7Z\xf1"
+```
+
+You could install ethereum on mac for accessing evm cli to run some evm code:
+
+```
+brew tap ethereum/ethereum
+brew install ethereum
+```
+
+It will install https://geth.ethereum.org/docs but haven't check how to use it.
+
+```
+key1, _ = crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")
+
+Output:
+*crypto/ecdsa.PrivateKey {
+    // PublicKey is using secp256k1 Curve algorithm with X and Y
+    // addr := crypto.PubkeyToAddress(key1.PublicKey) -> common.Address [113,86,43,113,153,152,115,219,91,40,109,249,87,175,25,158,201,70,23,247]
+    PublicKey: crypto/ecdsa.PublicKey {
+        Curve: crypto/elliptic.Curve(*github.com/ethereum/go-ethereum/crypto/secp256k1.BitCurve),
+        X: *(*"math/big.Int")(0x1400030ada0),
+        Y: *(*"math/big.Int")(0x1400030adc0),
+    },
+    // decimal format of private key
+    D: *math/big.Int {
+        neg: false,
+        abs: math/big.nat len: 4, cap: 8,
+        [12407301369221083793,1706326350199861566,5661049564597369326,13194545968182294445]
+    }
+}
+```
+
+TODO how does ECDSA work?
+
+TODO Debug func SignSetCode(prv *ecdsa.PrivateKey, auth SetCodeAuthorization) (SetCodeAuthorization, error) {
 
 
 
